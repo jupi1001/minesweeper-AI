@@ -21,7 +21,7 @@
   background-color: yellow; /* or any other color you choose for flagged cells */
 }
 
-.cell.mine {
+.cell.revealed.mine {
   background-color: red;
 }
 

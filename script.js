@@ -1,5 +1,6 @@
 const boardSize = 10; // Adjust this value to change the size of the grid
 const minesCount = 20; // Adjust this value to change the number of mines
+let firstClick = false;
 
 let grid = [];
 let flagMode = false;
@@ -59,6 +60,18 @@ function handleCellClick(event) {
   if (flagMode) {
     flagMine(row, col);
   } else {
+    // Ensure the first clicked cell is not a mine
+    if (grid[row][col].isMine && !firstClick) {
+      initializeGrid(); // Reset the grid and re-place mines
+      placeMines();
+      renderGrid();
+      handleCellClick(event); // Simulate the click again
+      firstClick = true;
+      return;
+    }
+
+    firstClick = true;
+
     revealSquare(row, col);
   }
 }
@@ -106,6 +119,7 @@ function revealSquare(row, col) {
       }
     });
   } else if (cell.isMine) {
+    cellElement.classList.add("mine");
     endGame(false);
   } else if (cell.value > 0) {
     cellElement.classList.add("revealed");
