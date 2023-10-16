@@ -4,6 +4,7 @@ let firstClick = false;
 
 let grid = [];
 let flagMode = false;
+let endOfGame = false;
 
 function initializeGrid() {
   for (let i = 0; i < boardSize; i++) {
@@ -152,13 +153,25 @@ function endGame(win) {
   } else {
     alert("Oops! You hit a mine. Game over!");
   }
+  endOfGame = true;
 }
 
 function resetGame() {
   grid = [];
+  endOfGame = false;
   initializeGrid();
   placeMines();
   renderGrid();
 }
 
 renderGrid();
+
+// ---------------AI Part ------------
+
+function startRandomAI() {
+  while (endOfGame == false) {
+    const row = Math.floor(Math.random() * boardSize);
+    const col = Math.floor(Math.random() * boardSize);
+    revealSquare(row, col);
+  }
+}
