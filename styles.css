@@ -13,9 +13,17 @@
 }
 
 .revealed {
-  background-color: gold;
+  background-color: lightgray;
 }
 
 .flagged {
   background-color: yellow; /* or any other color you choose for flagged cells */
+}
+
+.cell.mine {
+  background-color: red;
+}
+
+.cell.revealed {
+  background-color: lightgray;
 }

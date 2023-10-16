@@ -2,12 +2,13 @@ const boardSize = 10; // Adjust this value to change the size of the grid
 const minesCount = 20; // Adjust this value to change the number of mines
 
 let grid = [];
+let flagMode = false;
 
 function initializeGrid() {
   for (let i = 0; i < boardSize; i++) {
     grid[i] = [];
     for (let j = 0; j < boardSize; j++) {
-      grid[i][j] = { isMine: false, revealed: false, value: 0 };
+      grid[i][j] = { isMine: false, revealed: false, value: 0, flagged: false };
     }
   }
 }
@@ -51,6 +52,17 @@ function updateAdjacentValues(row, col) {
 
 placeMines();
 
+function handleCellClick(event) {
+  const row = parseInt(event.target.dataset.row);
+  const col = parseInt(event.target.dataset.col);
+
+  if (flagMode) {
+    flagMine(row, col);
+  } else {
+    revealSquare(row, col);
+  }
+}
+
 function renderGrid() {
   const boardElement = document.getElementById("minesweeper-board");
   boardElement.innerHTML = "";
@@ -62,33 +74,16 @@ function renderGrid() {
       cell.dataset.row = i;
       cell.dataset.col = j;
       boardElement.appendChild(cell);
+      cell.addEventListener("click", handleCellClick);
     }
   }
 }
 
-function handleCellClick(event) {
-  const row = parseInt(event.target.dataset.row);
-  const col = parseInt(event.target.dataset.col);
-
-  // Handle left click
-  if (event.button === 0) {
-    revealSquare(row, col);
-  }
-  // Handle right click
-  else if (event.button === 2) {
-    flagMine(row, col);
-  }
-}
-
-const cells = document.querySelectorAll(".cell");
-cells.forEach((cell) => {
-  cell.addEventListener("mousedown", handleCellClick);
-});
-
 function revealSquare(row, col) {
+  console.log("Clicked:" + row + col);
   const cell = grid[row][col];
 
-  if (cell.revealed || cell.isMine) {
+  if (cell.revealed || cell.flagged) {
     return;
   }
 
@@ -97,7 +92,6 @@ function revealSquare(row, col) {
   cellElement.classList.add("revealed");
 
   if (cell.value === 0) {
-    // If the cell is empty, recursively reveal adjacent cells
     const directions = [
       [-1, 0],
       [1, 0],
@@ -112,8 +106,7 @@ function revealSquare(row, col) {
         revealSquare(newRow, newCol);
       }
     });
-  } else if (cell.value === -1) {
-    // Game over, the user clicked on a mine
+  } else if (cell.isMine) {
     endGame(false);
   }
 }
@@ -121,11 +114,19 @@ function revealSquare(row, col) {
 function flagMine(row, col) {
   const cell = grid[row][col];
 
-  if (!cell.revealed) {
-    cell.flagged = !cell.flagged;
-    const cellElement = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-    cellElement.classList.toggle("flagged");
+  if (cell.revealed) {
+    return;
   }
+
+  cell.flagged = !cell.flagged;
+  const cellElement = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+  cellElement.classList.toggle("flagged");
+}
+
+function toggleMode() {
+  flagMode = !flagMode;
+  const modeButton = document.getElementById("mode-button");
+  modeButton.innerHTML = flagMode ? "🚩" : "💣"; // Unicode characters for flag and bomb
 }
 
 function endGame(win) {
