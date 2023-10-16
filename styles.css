@@ -1,0 +1,21 @@
+#minesweeper-board {
+  display: grid;
+  grid-template-columns: repeat(10, 30px); /* Adjust based on board size */
+  gap: 1px;
+  background-color: lightgray;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #000;
+  background-color: #ccc;
+}
+
+.revealed {
+  background-color: gold;
+}
+
+.flagged {
+  background-color: yellow; /* or any other color you choose for flagged cells */
+}
