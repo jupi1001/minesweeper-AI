@@ -1,3 +1,7 @@
+.everything {
+  margin-top: 10vh;
+}
+
 #minesweeper-board {
   display: grid;
   grid-template-columns: repeat(10, 30px); /* Adjust based on board size */

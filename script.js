@@ -124,7 +124,6 @@ function revealSquare(row, col) {
     endGame(false);
   } else if (cell.value > 0) {
     cellElement.classList.add("revealed");
-    console.log(cell.value); // Check if the value is being set
     cellElement.textContent = cell.value;
   }
 }
