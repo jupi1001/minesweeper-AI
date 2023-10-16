@@ -6,6 +6,17 @@ let grid = [];
 let flagMode = false;
 let endOfGame = false;
 
+const directions = [
+  [-1, -1],
+  [-1, 0],
+  [-1, 1],
+  [0, -1],
+  [0, 1],
+  [1, -1],
+  [1, 0],
+  [1, 1],
+];
+
 function initializeGrid() {
   for (let i = 0; i < boardSize; i++) {
     grid[i] = [];
@@ -31,17 +42,6 @@ function placeMines() {
 }
 
 function updateAdjacentValues(row, col) {
-  const directions = [
-    [-1, -1],
-    [-1, 0],
-    [-1, 1],
-    [0, -1],
-    [0, 1],
-    [1, -1],
-    [1, 0],
-    [1, 1],
-  ];
-
   directions.forEach((dir) => {
     const newRow = row + dir[0];
     const newCol = col + dir[1];
@@ -105,13 +105,13 @@ function revealSquare(row, col) {
   cellElement.classList.add("revealed");
 
   if (cell.value === 0) {
-    const directions = [
+    const smallDirections = [
       [-1, 0],
       [1, 0],
       [0, -1],
       [0, 1],
     ];
-    directions.forEach((dir) => {
+    smallDirections.forEach((dir) => {
       const newRow = row + dir[0];
       const newCol = col + dir[1];
 
@@ -173,4 +173,113 @@ function startRandomAI() {
     const col = Math.floor(Math.random() * boardSize);
     revealSquare(row, col);
   }
+}
+
+function startSmartAI() {
+  const row = Math.floor(Math.random() * boardSize);
+  const col = Math.floor(Math.random() * boardSize);
+  revealSquare(row, col);
+
+  let i = 0;
+  let lastMove = { row: -1, col: -1 };
+  while (endOfGame == false) {
+    var move = chooseSmartMove();
+    if (move && move != lastMove) {
+      revealSquare(move.row, move.col);
+      //Uncomment if bug free.
+      //i = 0;
+      lastMove = move;
+    } else {
+      const randomRow = Math.floor(Math.random() * boardSize);
+      const randomCol = Math.floor(Math.random() * boardSize);
+      console.log(
+        "No smart move available, resorting to random click." + "\b" + "row: " + randomRow + "col: " + randomCol
+      );
+      revealSquare(randomRow, randomCol);
+    }
+    i++;
+    //Move limit
+    if (i > 500) {
+      break;
+    }
+  }
+}
+
+function chooseSmartMove() {
+  for (let i = 0; i < boardSize; i++) {
+    for (let j = 0; j < boardSize; j++) {
+      const cell = grid[i][j];
+
+      if (cell.revealed && cell.value > 0) {
+        const flaggedCount = countFlaggedAdjacentCells(i, j);
+        const unrevealedCount = countUnrevealedAdjacentCells(i, j);
+
+        if (flaggedCount === cell.value && unrevealedCount > 0) {
+          return findUnrevealedAdjacentCell(i, j);
+        } else if (flaggedCount + unrevealedCount === cell.value) {
+          return flagUnrevealedAdjacentCells(i, j);
+        }
+        //console.log("cell: " + i + ":" + j);
+      }
+    }
+  }
+  return null;
+}
+
+function countFlaggedAdjacentCells(row, col) {
+  let count = 0;
+
+  for (const dir of directions) {
+    const newRow = row + dir[0];
+    const newCol = col + dir[1];
+
+    if (isValidCell(newRow, newCol) && grid[newRow][newCol].flagged) {
+      count++;
+    }
+  }
+  return count;
+}
+
+function countUnrevealedAdjacentCells(row, col) {
+  let count = 0;
+
+  for (const dir of directions) {
+    const newRow = row + dir[0];
+    const newCol = col + dir[1];
+
+    if (isValidCell(newRow, newCol) && !grid[newRow][newCol].revealed) {
+      count++;
+    }
+  }
+  return count;
+}
+
+function findUnrevealedAdjacentCell(row, col) {
+  for (const dir of directions) {
+    const newRow = row + dir[0];
+    const newCol = col + dir[1];
+
+    if (isValidCell(newRow, newCol) && !grid[newRow][newCol].revealed) {
+      return { row: newRow, col: newCol };
+    }
+  }
+
+  return null;
+}
+
+function isValidCell(row, col) {
+  return row >= 0 && row < boardSize && col >= 0 && col < boardSize;
+}
+
+function flagUnrevealedAdjacentCells(row, col) {
+  for (const dir of directions) {
+    const newRow = row + dir[0];
+    const newCol = col + dir[1];
+
+    if (isValidCell(newRow, newCol) && !grid[newRow][newCol].revealed && !grid[newRow][newCol].flagged) {
+      flagMine(newRow, newCol);
+    }
+  }
+
+  return null;
 }
