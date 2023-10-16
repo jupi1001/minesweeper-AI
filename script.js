@@ -80,7 +80,6 @@ function renderGrid() {
 }
 
 function revealSquare(row, col) {
-  console.log("Clicked:" + row + col);
   const cell = grid[row][col];
 
   if (cell.revealed || cell.flagged) {
@@ -108,6 +107,10 @@ function revealSquare(row, col) {
     });
   } else if (cell.isMine) {
     endGame(false);
+  } else if (cell.value > 0) {
+    cellElement.classList.add("revealed");
+    console.log(cell.value); // Check if the value is being set
+    cellElement.textContent = cell.value;
   }
 }
 
