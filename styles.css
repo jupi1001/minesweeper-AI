@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: repeat(10, 30px); /* Adjust based on board size */
   gap: 1px;
-  background-color: lightgray;
+  background-color: white;
 }
 
 .cell {
@@ -13,7 +13,7 @@
 }
 
 .revealed {
-  background-color: lightgray;
+  background-color: green;
 }
 
 .flagged {
@@ -25,5 +25,5 @@
 }
 
 .cell.revealed {
-  background-color: lightgray;
+  background-color: green;
 }
