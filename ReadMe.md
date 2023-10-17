@@ -8,3 +8,6 @@ One is just random, but the other uses logic and deduces the best moves to solve
 TODO :
 
 Cleanup code/Split it up
+
+Try it here:
+https://jupi1001.github.io/minesweeper-AI/
