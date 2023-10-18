@@ -58,14 +58,14 @@ body {
   background-color: #87cceb;
 }
 
+.cell.revealed.mine {
+  animation: explosion 0.5s ease-in-out;
+}
+
 .mode-button {
   font-size: 24px;
   margin-bottom: 10px;
   cursor: pointer;
-}
-
-.cell.revealed.mine {
-  animation: explosion 0.5s ease-in-out;
 }
 
 /* Sparkle Animation */
@@ -90,21 +90,4 @@ body {
     transform: scale(2);
     opacity: 0;
   }
-}
-
-/* Click Animation */
-@keyframes clickEffect {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.cell.clicked {
-  animation: clickEffect 0.2s ease;
 }
