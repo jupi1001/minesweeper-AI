@@ -72,7 +72,6 @@ function handleCellClick(event) {
     }
 
     firstClick = true;
-
     revealSquare(row, col);
   }
 }
