@@ -1,33 +1,51 @@
 body {
   font-family: "Arial", sans-serif;
-  background-color: #f0f0f0;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   margin: 0;
+  background-color: #87cceb;
+  background-image: url("images/2108.w015.n001.529A.p30.529.jpg");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 #minesweeper-board {
   display: grid;
   grid-template-columns: repeat(10, 40px);
   grid-gap: 2px;
+  background-color: lightyellow; /* Darker color for cell border */
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
 }
 
 .cell {
   width: 40px;
   height: 40px;
-  background-color: #ddd;
-  border: 1px solid #ccc;
+  background-color: #8e8e8e; /* Cell color (grey) */
+  border: 2px solid orange; /* Border color (light blue) */
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 20px;
   cursor: pointer;
+  border-radius: 5px; /* Rounded corners for a stone-like effect */
+  position: relative; /* Relative positioning for pseudo-elements */
+}
+
+.cell:before {
+  top: 0;
+}
+
+.cell:after {
+  bottom: 0;
 }
 
 .cell.revealed {
-  background-color: #fff;
+  background-color: #ccc;
   cursor: default;
   animation: sparkle 0.5s ease-in-out;
 }
@@ -46,33 +64,19 @@ body {
   cursor: pointer;
 }
 
-.mode-button:hover {
-  color: #ff4f4f;
-}
-
-.alert {
-  font-size: 24px;
-  font-weight: bold;
-  color: #ff4f4f;
-  margin-bottom: 10px;
-}
-
 .cell.revealed.mine {
   animation: explosion 0.5s ease-in-out;
 }
 
 /* Sparkle Animation */
 @keyframes sparkle {
-  0%,
-  100% {
+  0% {
     transform: scale(1);
     opacity: 1;
-    filter: brightness(1); /* Bright yellow effect */
   }
-  50% {
-    transform: scale(1.2);
-    opacity: 0.8;
-    filter: brightness(5); /* Increase brightness for sparkle effect */
+  100% {
+    transform: scale(2);
+    opacity: 0;
   }
 }
 
@@ -86,4 +90,21 @@ body {
     transform: scale(2);
     opacity: 0;
   }
+}
+
+/* Click Animation */
+@keyframes clickEffect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.cell.clicked {
+  animation: clickEffect 0.2s ease;
 }
